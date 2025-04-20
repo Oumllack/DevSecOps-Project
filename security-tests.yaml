@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: security-scans
+  namespace: secure-app
+spec:
+  schedule: "0 0 * * *"  # Exécution quotidienne
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: security-scanner
+            image: aquasec/kube-bench:latest
+            command: ["kube-bench"]
+            args: ["run", "--targets", "node,master"]
+          - name: vulnerability-scanner
+            image: aquasec/trivy:latest
+            command: ["trivy"]
+            args: ["image", "nginx:latest"]
+          restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000 

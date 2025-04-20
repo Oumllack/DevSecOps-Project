@@ -1,0 +1,57 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: web-app-monitor
+  namespace: secure-app
+spec:
+  selector:
+    matchLabels:
+      app: web-app
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 15s
+    scrapeTimeout: 10s
+    honorLabels: true
+    relabelings:
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      targetLabel: pod_name
+    - sourceLabels: [__meta_kubernetes_namespace]
+      targetLabel: namespace
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: secure-app
+data:
+  security-alerts.yaml: |
+    groups:
+    - name: security
+      rules:
+      - alert: HighCPUUsage
+        expr: rate(container_cpu_usage_seconds_total{container="web-app"}[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "CPU usage high"
+          description: "Container {{ $labels.container }} in pod {{ $labels.pod }} has high CPU usage"
+      
+      - alert: HighMemoryUsage
+        expr: container_memory_usage_bytes{container="web-app"} > 500000000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory usage high"
+          description: "Container {{ $labels.container }} in pod {{ $labels.pod }} has high memory usage"
+      
+      - alert: SecurityScanFailed
+        expr: kube_job_status_failed{job=~"security-scan-.*"} == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Security scan failed"
+          description: "Security scan job {{ $labels.job }} has failed" 

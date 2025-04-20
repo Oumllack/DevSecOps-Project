@@ -1,0 +1,175 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-app-config
+  namespace: secure-app
+data:
+  nginx.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+
+        # Configuration de sécurité
+        add_header X-Content-Type-Options nosniff;
+        add_header X-Frame-Options DENY;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline';";
+    }
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Application Sécurisée</title>
+        <style>
+            :root {
+                --primary-color: #2c3e50;
+                --secondary-color: #3498db;
+                --accent-color: #e74c3c;
+                --text-color: #2c3e50;
+                --background-color: #ecf0f1;
+            }
+            
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                background-color: var(--background-color);
+            }
+            
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+            
+            header {
+                background-color: var(--primary-color);
+                color: white;
+                padding: 1rem 0;
+                text-align: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+            
+            .hero {
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+                padding: 4rem 0;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+            
+            .feature-card {
+                background: white;
+                padding: 2rem;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease;
+            }
+            
+            .feature-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .feature-card h3 {
+                color: var(--secondary-color);
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card p {
+                color: var(--text-color);
+            }
+            
+            footer {
+                background-color: var(--primary-color);
+                color: white;
+                text-align: center;
+                padding: 1rem 0;
+                margin-top: 2rem;
+            }
+            
+            .security-badge {
+                background-color: var(--accent-color);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                display: inline-block;
+                margin-top: 1rem;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <h1>Application Sécurisée</h1>
+            </div>
+        </header>
+        
+        <section class="hero">
+            <div class="container">
+                <h1>Bienvenue sur notre Application Sécurisée</h1>
+                <p>Une application moderne avec des mesures de sécurité avancées</p>
+                <div class="security-badge">Sécurisé avec Kubernetes</div>
+            </div>
+        </section>
+        
+        <div class="container">
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Haute Disponibilité</h3>
+                    <p>Déploiement sur plusieurs pods pour assurer une disponibilité maximale</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Sécurité Renforcée</h3>
+                    <p>Network Policies, Secrets Management et Conteneurs Non-Root</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>Monitoring</h3>
+                    <p>Surveillance continue et tests de sécurité automatisés</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>&copy; 2024 Application Sécurisée. Tous droits réservés.</p>
+            </div>
+        </footer>
+    </body>
+    </html>
+  environment: production
+  log_level: info 

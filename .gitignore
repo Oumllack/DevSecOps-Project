@@ -1,0 +1,42 @@
+# Fichiers sensibles
+*.key
+*.pem
+*.crt
+*.cert
+*.secret
+.env
+.env.*
+
+# Fichiers de build
+dist/
+build/
+*.jar
+*.war
+*.ear
+
+# Fichiers de logs
+*.log
+logs/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Fichiers IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Fichiers Kubernetes
+kubeconfig
+kubeconfig.yaml
+
+# Fichiers de configuration locale
+config
+
+# Fichiers de cache
+.cache/
+node_modules/ 
