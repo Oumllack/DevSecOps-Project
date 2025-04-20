@@ -1,6 +1,29 @@
-# Application Web Sécurisée
+# DevSecOps Project
 
-Ce projet est une application web déployée sur Kubernetes avec des mesures de sécurité avancées.
+This project demonstrates a secure web application deployment using modern DevSecOps practices. The application is containerized with Docker and deployed on Kubernetes with comprehensive security measures.
+
+## Key Technologies Used
+
+- **Kubernetes**: For container orchestration and deployment
+- **Docker**: For containerization of the web application
+- **Nginx**: As the web server
+- **Security Features**:
+  - Network Policies for traffic control
+  - Pod Security Policies for runtime security
+  - RBAC for access control
+  - Secrets management
+  - Monitoring setup
+
+## Security Implementations
+
+- Network isolation using NetworkPolicies
+- Secure namespace configuration
+- Secrets management with Kubernetes Secrets
+- Role-Based Access Control (RBAC)
+- Pod Security Policies
+- Monitoring and logging setup
+
+The application is accessible locally on port 8086 after port-forwarding the Kubernetes service.
 
 ## Prérequis
 
